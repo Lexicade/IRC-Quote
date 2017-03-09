@@ -1,4 +1,4 @@
-def Gen(strInputNick):
+def Gen(phenny,strInputNick):
     import MySQLdb
     from subprocess import Popen
     import os

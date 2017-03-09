@@ -84,7 +84,7 @@ def q(phenny, input):
                     phenny.say("Please enter the ID for the quote you want to delete.")
             elif '-gen' in inCmd and intWhitelist == 1:
                 phenny.say("Creating logfile. Please wait...")
-                QuoteGenerate.Gen(input.nick)
+                QuoteGenerate.Gen(phenny, input.nick)
                 phenny.say("Your logfile is complete.")
             elif '-s' in inCmd and intWhitelist == 1:
                 strID = QuoteSave.Save(input.nick, input.group())
