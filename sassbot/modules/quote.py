@@ -9,6 +9,8 @@ import QuoteMain
 import QuoteGenerate
 import QuoteSave
 import QuoteWhitelist
+import QuoteDelete
+import QuoteFavourite
 
 def q(phenny, input):
 
@@ -56,38 +58,22 @@ def q(phenny, input):
             phenny.say("Fucking calm down, son.")
         elif input.sender.lower() == "#fromsteamland" or input.sender.lower() == "#thelewdzone":
             if '-h' in inCmd:
-                phenny.say("[This is old, results may vary]!q supports the following: -h, -w, -gen, -s [nick], -hof")
-
+                phenny.say("Available commands are: -w(hitelist), -l(ist favourites), -rm <Number>(Delete favourited quotes), -gen(erate logfile), -s(ave) <Quote>")
             elif '-w' in inCmd:
                 strReturn = QuoteWhitelist.Main(inCmd[2], inCmd[3], phenny)
                 phenny.write(('NOTICE', input.nick), strReturn)
             elif '-l' in inCmd and intWhitelist == 1:
-                strQuote = intQuoteID = ""
-                c.execute("SELECT `ID`, `quote` FROM `quote-grab` ORDER BY RAND() LIMIT 1;")
-                sqlRandomQuote = c.fetchall()
-                for row in sqlRandomQuote:
-                    strQuoteID = "[ID:" + str(row["ID"])+ "]"
-                    strQuoteString = row["quote"]
-
-                phenny.say(Botify(strQuoteID+strQuoteString))
+                strReturn = QuoteFavourite.SaveFavourite(phenny)
+                phenny.say(Botify(strReturn))
             elif '-rm' in inCmd and intWhitelist == 1:
-                try:
-                    strInputID = inCmd[2]
-                except IndexError:
-                    strInputID = ''
-
-                if strInputID.isnumeric():
-                    c.execute("DELETE FROM `quote-grab` WHERE `ID`="+str(strInputID))
-                    db.commit()
-                    phenny.say("Deleted.")
-                else:
-                    phenny.say("Please enter the ID for the quote you want to delete.")
+                strReturn = QuoteDelete.DeleteFavourite(phenny, inCmd[2])
+                phenny.say(strReturn)
             elif '-gen' in inCmd and intWhitelist == 1:
                 phenny.say("Creating logfile. Please wait...")
                 QuoteGenerate.Gen(phenny, input.nick)
                 phenny.say("Your logfile is complete.")
             elif '-s' in inCmd and intWhitelist == 1:
-                strID = QuoteSave.Save(input.nick, input.group())
+                strID = QuoteSave.Save(phenny, input.nick, input.group())
                 phenny.say("Quote saved with ID: "+strID)
             elif input.group() == "!q" and intWhitelist == 1:
                 strReturn = QuoteMain.RandomQuote(input.nick)

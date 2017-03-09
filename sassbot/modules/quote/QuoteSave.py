@@ -1,4 +1,4 @@
-def Save(strNick, strInput):
+def Save(phenny, strNick, strInput):
     import MySQLdb
 
     db = MySQLdb.connect(host="localhost", user=phenny.config.mysql_username, passwd=phenny.config.mysql_password,db="IRC")
